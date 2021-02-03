@@ -134,5 +134,32 @@ func TestDivide(t *testing.T) {
 			t.Errorf("%s, Divide(%f, %f) = %f, want %f", tc.name, tc.a, tc.b, got, tc.want)
 		}
 	}
+}
 
+func TestSqrt(t *testing.T) {
+	t.Parallel()
+
+	tt := []struct {
+		name        string
+		a           float64
+		want        float64
+		expectedErr bool
+	}{
+		{name: "Sqrt positive number", a: 9, want: 3, expectedErr: false},
+		{name: "Sqrt 0 number", a: 0, want: 0, expectedErr: false},
+		{name: "Sqrt negative number", a: -4, want: 0, expectedErr: true},
+		{name: "Sqrt negative number", a: -16.5, want: 0, expectedErr: true},
+	}
+
+	for _, tc := range tt {
+		got, err := calculator.Sqrt(tc.a)
+
+		if err != nil && !tc.expectedErr {
+			t.Errorf("%s, Sqrt(%f) should return error", tc.name, tc.a)
+		}
+
+		if got != tc.want && !tc.expectedErr {
+			t.Errorf("%s, Sqrt(%f) = %f, want %f", tc.name, tc.a, got, tc.want)
+		}
+	}
 }
