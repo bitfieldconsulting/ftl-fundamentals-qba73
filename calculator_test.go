@@ -194,3 +194,42 @@ func TestSqrt(t *testing.T) {
 		}
 	}
 }
+
+func TestCompute(t *testing.T) {
+	t.Parallel()
+
+	tt := []struct {
+		name        string
+		expression  string
+		want        float64
+		expectedErr bool
+	}{
+		{name: "Compute sum", expression: "2 + 3", want: 5, expectedErr: false},
+		{name: "Compute sum, no float", expression: "2 + 4", want: 6, expectedErr: false},
+		{name: "Compute substract, no float", expression: "5 - 2", want: 3, expectedErr: false},
+		{name: "Compute multiply, no float", expression: "4 * -4", want: -16, expectedErr: false},
+		{name: "Compute multiply, no float", expression: "3 * -2", want: -6, expectedErr: false},
+		{name: "Compute multiply, no float", expression: "-3 * 2", want: -6, expectedErr: false},
+		{name: "Compute divide, no float", expression: "10 / 2", want: 5, expectedErr: false},
+		{name: "Compute additional spaces", expression: "2  + 4 ", want: 6, expectedErr: false},
+		{name: "Compute additional spaces", expression: " 2  +  4  ", want: 6, expectedErr: false},
+		{name: "Compute additional spaces", expression: "  2    +  -4  ", want: -2, expectedErr: false},
+
+		// Negative cases. They should return error.
+		{name: "Compute incorrect operator", expression: " 10 & 2   ", want: 0, expectedErr: true},
+		{name: "Compute incorrect operator", expression: " 10  #  2", want: 0, expectedErr: true},
+		{name: "Compute incorrect operator", expression: "10 & 2", want: 0, expectedErr: true},
+	}
+
+	for _, tc := range tt {
+		got, err := calculator.Compute(tc.expression)
+
+		if err != nil && !tc.expectedErr {
+			t.Errorf("%s, Compute(%s) = %v, expected error", tc.name, tc.expression, err)
+		}
+
+		if got != tc.want && !tc.expectedErr {
+			t.Errorf("%s, Compute(%s) = %f, want %f", tc.name, tc.expression, got, tc.want)
+		}
+	}
+}

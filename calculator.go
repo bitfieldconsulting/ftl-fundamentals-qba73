@@ -3,6 +3,7 @@ package calculator
 
 import (
 	"errors"
+	"fmt"
 	"math"
 )
 
@@ -13,6 +14,10 @@ var (
 
 	errDivisionByZero     = errors.New("division by zero")
 	errSqrtNumberNegative = errors.New("sqrt from negative number")
+
+	// Errors for
+	errIncorrectParams  = errors.New("required two parameters and operator")
+	errIcorrectOperator = errors.New("incorrect operator provided")
 )
 
 // Add takes 2 or more numbers and returns the result of adding them together.
@@ -88,4 +93,42 @@ func Sqrt(a float64) (float64, error) {
 		return 0, errSqrtNumberNegative
 	}
 	return math.Sqrt(a), nil
+}
+
+// Compute takes a string representing numbers
+// and operation (+, -, /, *) on them and returns
+// result of the operation. It returns an error
+// if the computation sign is not recognized or
+// division by zero attempted.
+//
+// Examples:
+//
+// Compute("3 - 2") should return 1
+// Compute("2 & 2") should return error
+func Compute(expression string) (float64, error) {
+	var a, b float64
+	var operator string
+	var err error
+
+	n, err := fmt.Sscanf(expression, "%f %s %f", &a, &operator, &b)
+	if err != nil {
+		return 0, err
+	}
+
+	if n != 3 {
+		return 0, errIncorrectParams
+	}
+
+	switch operator {
+	case "+":
+		return a + b, nil
+	case "-":
+		return a - b, nil
+	case "*":
+		return a * b, nil
+	case "/":
+		return a / b, nil
+	default:
+		return 0, errIcorrectOperator
+	}
 }
