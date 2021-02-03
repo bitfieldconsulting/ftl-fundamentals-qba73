@@ -25,17 +25,18 @@ func TestAdd(t *testing.T) {
 
 	tt := []struct {
 		name string
-		a    float64
-		b    float64
+		nums []float64
 		want float64
 	}{
-		{name: "Add two positive numbers", a: 4, b: 5, want: 9},
-		{name: "Add two negative numbers", a: -4.5, b: -5.5, want: -10},
-		{name: "Add zero to positive number", a: 3, b: 0, want: 3},
+		{name: "Add two positive numbers", nums: []float64{1, 2}, want: 3},
+		{name: "Add two negative numbers", nums: []float64{-4.5, -5.5}, want: -10},
+		{name: "Add multiple numbers", nums: []float64{-4.5, -5.5, 10, 2.5}, want: 2.5},
+		{name: "Add no numbers", nums: []float64{}, want: 0},
+		{name: "Add one number", nums: []float64{10}, want: 10},
 	}
 
 	for _, tc := range tt {
-		got := calculator.Add(tc.a, tc.b)
+		got := calculator.Add(tc.nums...)
 		if tc.want != got {
 			t.Errorf("%s, want %f, got %f", tc.name, tc.want, got)
 		}
