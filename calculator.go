@@ -46,19 +46,14 @@ func Multiply(a, b float64, c ...float64) float64 {
 // Divide takes two or more numbers and return the result of division.
 // It returns division by zero error if the n+1 argument is equal 0.
 func Divide(a, b float64, c ...float64) (float64, error) {
-	if a == 0 {
-		return 0, nil
-	}
-	if b == 0 {
-		return 0, fmt.Errorf("invalid input Divide(%f, %f), division by zero", a, b)
-	}
 	result := a / b
 
 	for _, i := range c {
-		if i == 0 {
-			return 0, fmt.Errorf("invalid input, Divide(%f, %f, %f) division by zero", a, b, i)
-		}
 		result /= i
+	}
+
+	if math.IsInf(result, 0) {
+		return 0, fmt.Errorf("invalid input Divide(%f, %f, %v), division by zero is undefined", a, b, c)
 	}
 
 	return result, nil
